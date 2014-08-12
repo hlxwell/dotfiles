@@ -1,20 +1,63 @@
 [user]
-	name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
-	email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
-[alias]
-	co = checkout
+  name = <%= print("Your Name: "); STDOUT.flush; STDIN.gets.chomp %>
+  email = <%= print("Your Email: "); STDOUT.flush; STDIN.gets.chomp %>
 [color]
-	diff = auto
-	status = auto
-	branch = auto
+  diff = auto
+  status = auto
+  branch = auto
+  status = auto
+  branch = auto
+  diff = auto
+  ui = true
+  pager = true
+[alias]
+  st = status -sb
+  ds = diff --staged
+  undo = reset --soft HEAD^
+  ls = log --pretty=format:"%C(yellow)%h %C(blue)%ad%C(red)%d %C(reset)%s%C(green) [%cn]" --decorate --date=short
+  graph = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
+  standup = log --since '1 day ago' --oneline --author
+  ci = commit -a
+  co = checkout
+  b  = branch -a
+  br = branch
+  bd = branch -D
+  si = svn dcommit
+  cia = commit -a --amend
+  ps = push origin
+  pl = pull origin
+  pro = pull --rebase origin
+  prom = pull --rebase origin master
+  pushom = push origin master
+  pullom = pull origin master
+  pushos = push origin staging
+  pullos = pull origin staging
+  pushop = push origin production
+  pullop = pull origin production
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 [core]
-	excludesfile = <%= ENV['HOME'] %>/.gitignore
-	editor = mate -w
-	autocrlf = input
+  excludesfile = <%= ENV['HOME'] %>/.gitignore
+  editor = "nano "
+  autocrlf = input
 [apply]
-	whitespace = nowarn
+  whitespace = nowarn
 [format]
-	pretty = %C(yellow)%h%Creset %s %C(red)(%an, %cr)%Creset
+  pretty = %C(yellow)%h%Creset %s %C(red)(%an, %cr)%Creset
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = cyan
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = cyan bold
+[color "status"]
+  added = yellow
+  changed = red
+  untracked = cyan
+[push]
+  default = matching
 [github]
-	user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
-	token = <%= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>
+  user = <%= print("GitHub Username: "); STDOUT.flush; STDIN.gets.chomp %>
+  token = <%= print("GitHub API Token: "); STDOUT.flush; STDIN.gets.chomp %>

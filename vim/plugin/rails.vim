@@ -1,7 +1,6 @@
 " rails.vim - Detect a rails application
-" Author:       Tim Pope <vimNOSPAM@tpope.org>
+" Author:       Tim Pope <http://tpo.pe/>
 " GetLatestVimScripts: 1567 1 :AutoInstall: rails.vim
-" URL:          http://rails.vim.tpope.net/
 
 " Install this file as plugin/rails.vim.  See doc/rails.txt for details. (Grab
 " it from the URL above if you don't have it.)  To access it from Vim, see
@@ -56,11 +55,11 @@ call s:SetOptDefault("rails_statusline",1)
 call s:SetOptDefault("rails_syntax",1)
 call s:SetOptDefault("rails_mappings",1)
 call s:SetOptDefault("rails_abbreviations",1)
-call s:SetOptDefault("rails_ctags_arguments","--exclude=\"*.js\"")
+call s:SetOptDefault("rails_ctags_arguments","--languages=-javascript")
 call s:SetOptDefault("rails_default_file","README")
 call s:SetOptDefault("rails_root_url",'http://localhost:3000/')
 call s:SetOptDefault("rails_modelines",0)
-call s:SetOptDefault("rails_menu",1)
+call s:SetOptDefault("rails_menu",0)
 call s:SetOptDefault("rails_gnu_screen",1)
 call s:SetOptDefault("rails_history_size",5)
 call s:SetOptDefault("rails_generators","controller\ngenerator\nhelper\nintegration_test\nmailer\nmetal\nmigration\nmodel\nobserver\nperformance_test\nplugin\nresource\nscaffold\nscaffold_controller\nsession_migration\nstylesheets")
@@ -80,6 +79,9 @@ function! s:escvar(r)
 endfunction
 
 function! s:Detect(filename)
+  if exists('b:rails_root')
+    return s:BufInit(b:rails_root)
+  endif
   let fn = substitute(fnamemodify(a:filename,":p"),'\c^file://','','')
   let sep = matchstr(fn,'^[^\\/]\{3,\}\zs[\\/]')
   if sep != ""
@@ -108,7 +110,7 @@ function! s:Detect(filename)
       return s:BufInit(fn)
     endif
     let ofn = fn
-    let fn = fnamemodify(ofn,':s?\(.*\)[\/]\(app\|config\|db\|doc\|features\|lib\|log\|public\|script\|spec\|stories\|test\|tmp\|vendor\)\($\|[\/].*$\)?\1?')
+    let fn = fnamemodify(ofn,':s?\(.*\)[\/]\(app\|config\|db\|doc\|extras\|features\|lib\|log\|public\|script\|spec\|stories\|test\|tmp\|vendor\)\($\|[\/].*$\)?\1?')
   endwhile
   return 0
 endfunction
@@ -214,16 +216,16 @@ function! s:CreateMenus() abort
       exe menucmd.g:rails_installed_menu.'.&Alternate\ file\	:A\ /\ [f :A<CR>'
       exe menucmd.g:rails_installed_menu.'.&File\ under\ cursor\	gf :Rfind<CR>'
     endif
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Controller :find app/controllers/application.rb<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Helper :find app/helpers/application_helper.rb<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Javascript :find public/javascripts/application.js<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Controller :Rcontroller application<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Helper :Rhelper application<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Javascript :Rjavascript application<CR>'
     exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &Layout :Rlayout application<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &README :find doc/README_FOR_APP<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Environment :find config/environment.rb<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Database\ Configuration :find config/database.yml<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.Database\ &Schema :Rmigration 0<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.R&outes :find config/routes.rb<CR>'
-    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Test\ Helper :find test/test_helper.rb<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.Application\ &README :R doc/README_FOR_APP<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Environment :Renvironment<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Database\ Configuration :R config/database.yml<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.Database\ &Schema :Rschema<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.R&outes :Rinitializer<CR>'
+    exe menucmd.g:rails_installed_menu.'.&Other\ files.&Test\ Helper :Rintegrationtest<CR>'
     exe menucmd.g:rails_installed_menu.'.-FSep- :'
     exe menucmd.g:rails_installed_menu.'.Ra&ke\	:Rake :Rake<CR>'
     let menucmd = substitute(menucmd,'200 $','500 ','')

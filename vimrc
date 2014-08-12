@@ -1,207 +1,143 @@
-" based on http://github.com/jferris/config_files/blob/master/vimrc
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+"语法高亮
+syntax on
+"允许插件(plugin)和缩进(indent)
+filetype on
+filetype plugin on
+filetype indent on
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-set nobackup
-set nowritebackup
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" This is an alternative that also works in block mode, but the deleted
-" text is lost and it only works for putting the current register.
-"vnoremap p "_dp
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-  syntax on
-  set hlsearch
-endif
-
-" Switch wrap off for everything
-set nowrap
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-
-  " Set File type to 'text' for files ending in .txt
-  autocmd BufNewFile,BufRead *.txt setfiletype text
-
-  " Enable soft-wrapping for text files
-  autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  " autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
-  " Automatically load .vimrc source when saved
-  autocmd BufWritePost .vimrc source $MYVIMRC
-
-  augroup END
-
-else
-
-  set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" if has("folding")
-  " set foldenable
-  " set foldmethod=syntax
-  " set foldlevel=1
-  " set foldnestmax=2
-  " set foldtext=strpart(getline(v:foldstart),0,50).'\ ...\ '.substitute(getline(v:foldend),'^[\ #]*','','g').'\ '
-" endif
-
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set expandtab
-
-" Always display the status line
-set laststatus=2
-
-" \ is the leader character
-let mapleader = ","
-
-" Edit the README_FOR_APP (makes :R commands work)
-map <Leader>R :e doc/README_FOR_APP<CR>
-
-" Leader shortcuts for Rails commands
-map <Leader>m :Rmodel 
-map <Leader>c :Rcontroller 
-map <Leader>v :Rview 
-map <Leader>u :Runittest 
-map <Leader>f :Rfunctionaltest 
-map <Leader>tm :RTmodel 
-map <Leader>tc :RTcontroller 
-map <Leader>tv :RTview 
-map <Leader>tu :RTunittest 
-map <Leader>tf :RTfunctionaltest 
-map <Leader>sm :RSmodel 
-map <Leader>sc :RScontroller 
-map <Leader>sv :RSview 
-map <Leader>su :RSunittest 
-map <Leader>sf :RSfunctionaltest 
-
-" Hide search highlighting
-map <Leader>h :set invhls <CR>
-
-" Opens an edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>e
-map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Opens a tab edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>t
-map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-" Inserts the path of the currently edited file into a command
-" Command mode: Ctrl+P
-cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-
-" Duplicate a selection
-" Visual mode: D
-vmap D y'>p
-
-" Press Shift+P while in visual mode to replace the selection without
-" overwriting the default register
-vmap P p :call setreg('"', getreg('0')) <CR>
-
-" For Haml
-au! BufRead,BufNewFile *.haml         setfiletype haml
-
-" No Help, please
-nmap <F1> <Esc>
-
-" Press ^F from insert mode to insert the current file name
-imap <C-F> <C-R>=expand("%")<CR>
-
-" Maps autocomplete to tab
-imap <Tab> <C-N>
-
-imap <C-L> <Space>=><Space>
-
-" Display extra whitespace
-" set list listchars=tab:»·,trail:·
-
-" Edit routes
-command! Rroutes :e config/routes.rb
-command! Rschema :e db/schema.rb
-
-" Local config
-if filereadable(".vimrc.local")
-  source .vimrc.local
-endif
-
-" Use Ack instead of Grep when available
-if executable("ack")
-  set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=coverage
-endif
-
-" Color scheme
-" colorscheme vividchalk
-" highlight NonText guibg=#060606
-" highlight Folded  guibg=#0A0A0A guifg=#9090D0
-
-" Numbers
+"当垂直移动时，光标头或底部还有7行
+set so=7
+"显示位置信息
+set ruler
+"打开 wildmenu 选项，启动具有菜单项提示的命令行自动完成
+set wildmenu
+"显示命令
+set showcmd
+"命令行窗口高度
+set cmdheight=1
+"显示配对括号
+set showmatch
+set guifont=Monaco:h14
+" set guifontwide=WenQuanYi\ Zen\ Hei:h12:cGBK
+" 设定文件浏览器目录为当前目录
+set bsdir=buffer
+" 设置编码
+set enc=utf-8
+" 设置文件编码
+set fenc=utf-8
+" 设置文件编码检测类型及支持格式
+set fencs=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+"显示行号
 set number
-set numberwidth=5
+" 查找结果高亮度显示
+set hlsearch
+" tab宽度
+set expandtab
+set tabstop=2
+set cindent shiftwidth=2
+" set autoindent shiftwidth=2
+" set nowrap
+set foldmarker=%%%',%%%.
+set foldmethod=marker
 
-" Snippets are activated by Shift+Tab
-let g:snippetsEmu_key = "<S-Tab>"
+au BufRead,BufNewFile *.coffee set filetype=coffee
+au BufRead,BufNewFile *.slim set filetype=slim
 
-" Tab completion options
-" (only complete to the longest unambiguous match, and show a menu)
-set completeopt=longest,menu
-set wildmode=list:longest,list:full
-set complete=.,t
+let coffee_compiler='/Users/michaelhe/node_modules/.bin/coffee'
 
-" case only matters with mixed case expressions
-set ignorecase
-set smartcase
+set nocompatible
+set laststatus=2
+set t_Co=256
+let g:Powerline_symbols = 'unicode'
 
-" Tags
-let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
-set tags=./tags;
+if has('gui_running')
+  set transparency=5        " set transparent window
+  set guioptions=egmrt      " hide the gui menubar
+endif
 
-let g:fuf_splitPathMatching=1
+syntax enable
+set background=light
+colorscheme solarized
+let g:solarized_termcolors=256
 
-" Open URL
-command -bar -nargs=1 OpenURL :!open <args>
-function! OpenURL()
-  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;:]*')
-  echo s:uri
-  if s:uri != ""
-	  exec "!open \"" . s:uri . "\""
-  else
-	  echo "No URI found in line."
-  endif
-endfunction
-map <Leader>w :call OpenURL()<CR>
+let g:ackprg = 'ag --nogroup --nocolor --column --ignore=log'
+let g:agprg = 'ag --nogroup --nocolor --column --ignore=log --ignore=tmp'
 
+filetype plugin indent on
+" 把 F8 映射到启动NERDTree插件
+map <C-T> :NERDTree<CR>
+map <S-R> :NERDTreeFind<CR>
+
+" 把 CTRL-S 映射为 保存,因为这个操作做得太习惯了
+map <C-O> :w<CR>
+map <C-X> :q<CR>
+
+" shift tab pages
+map <S-Left> :tabp<CR>
+map <S-Right> :tabn<CR>
+
+map <S-Up> :tabn<CR>
+map <S-Down> :tabn<CR>
+
+map <D-1> 1gt
+map <D-2> 2gt
+map <D-3> 3gt
+map <D-4> 4gt
+map <D-5> 5gt
+map <D-6> 6gt
+map <D-7> 7gt
+map <D-8> 8gt
+map <D-9> 9gt
+
+map <D-d> :%s/\s\+$//e<CR>
+
+set foldenable
+colorscheme railscasts
+
+" vundle management
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" Remove tailing spaces
+autocmd BufWritePre * :%s/\s\+$//e
+
+
+" let Vundle manage Vundle
+" required!
+Bundle 'gmarik/vundle'
+
+" My Bundles here:
+" original repos on github
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'tpope/vim-rails.git'
+Bundle 'kien/ctrlp.vim'
+" vim-scripts repos
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+" non github repos
+Bundle 'git://github.com/msanders/snipmate.vim.git'
+Bundle 'git://github.com/mattn/zencoding-vim.git'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'git://github.com/vim-scripts/ctags.vim.git'
+Bundle 'git://github.com/vim-scripts/gitvimrc.vim.git'
+Bundle 'git://github.com/vim-scripts/instant-markdown.vim.git'
+Bundle 'git://github.com/bbommarito/vim-slim.git'
+Bundle 'git://github.com/msanders/cocoa.vim.git'
+Bundle 'git://github.com/vim-scripts/Rename2.git'
+Bundle 'git://github.com/vim-scripts/ShowTrailingWhitespace.git'
+Bundle 'git://github.com/tpope/vim-git.git'
+Bundle 'git://github.com/motemen/git-vim.git'
+Bundle 'git://github.com/mattn/zencoding-vim.git'
+Bundle 'git://github.com/tomtom/tcomment_vim.git'
+Bundle 'git://github.com/ecomba/vim-ruby-refactoring.git'
+Bundle 'git://github.com/janx/vim-rubytest.git'
+Bundle 'git://github.com/kchmck/vim-coffee-script.git'
+Bundle 'git://github.com/vim-scripts/ctags.vim.git'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'git://github.com/Lokaltog/vim-powerline.git'
+Bundle 'git://github.com/SirVer/ultisnips.git'
+Bundle 'rking/ag.vim'
+Bundle 'scrooloose/nerdtree'
