@@ -1,4 +1,4 @@
-. .ec2rc
+source ~/.ec2rc
 
 ### Environment Vars ====================================
 export CC=/Developer/usr/bin/gcc
